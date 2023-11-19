@@ -1,27 +1,34 @@
+import Game from "./Game.js";
+
 export default class Player {
+    game: Game;
     playerName: string;
     height: number;
     width: number;
     x: number;
     y: number;
-    canvas: HTMLCanvasElement;
-    ctx: CanvasRenderingContext2D;
-    constructor(playerName: string, height: number, width: number, x: number, y: number, canvas: HTMLCanvasElement) {
+    speedY: number;
+    speedX: number;
+    constructor(game: Game, playerName: string) {
+        this.game = game;
         this.playerName = playerName;
-        this.height = height;
-        this.width = width;
-        this.x = x;
-        this.y = y;
-        this.canvas = canvas;
-        this.ctx = canvas.getContext('2d')!;
-
+        this.height = 100;
+        this.width = 50;
+        this.x = 0;
+        this.y = 924;
+        this.speedY = 0;
+        this.speedX = 0;
     }
 
-    draw() {
-        this.ctx.beginPath();
-        this.ctx.rect(this.x, this.y, this.width, this.height);
-        this.ctx.fillStyle = "#000";
-        this.ctx.fill();
+    update(){
+        this.y += this.speedY;
+    }
+
+    draw(context: CanvasRenderingContext2D) {
+        context.beginPath();
+        context.rect(this.x, this.y, this.width, this.height);
+        context.fillStyle = "#000";
+        context.fill();
     }
     moveForward() {
 
