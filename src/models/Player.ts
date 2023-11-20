@@ -21,6 +21,12 @@ export default class Player {
     }
 
     update(){
+        if (this.game.keys.includes('ArrowRight')) {
+            this.speedX = 2;
+        } else if (!this.game.keys.includes('ArrowRight')){
+            this.speedX = 0;
+        }
+        this.x += this.speedX;
         this.y += this.speedY;
     }
 
@@ -30,24 +36,4 @@ export default class Player {
         context.fillStyle = "#000";
         context.fill();
     }
-    moveForward() {
-
-    }
-
-    moveBackward() {
-
-    }
-
-    climb() {
-
-    }
-
-    jump() {
-
-    }
-
-    attack() {
-
-    }
-
 }
