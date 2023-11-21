@@ -9,6 +9,13 @@ export default class Player {
     y: number;
     speedY: number;
     speedX: number;
+    isMovingLeft: boolean;
+    isMovingRight: boolean;
+    isJumping: boolean;
+    jumpStrength: number;
+    jumpCount: number;
+    maxJumps: number;
+
     constructor(game: Game, playerName: string) {
         this.game = game;
         this.playerName = playerName;
@@ -18,32 +25,62 @@ export default class Player {
         this.y = 924;
         this.speedY = 0;
         this.speedX = 0;
+        this.isMovingLeft = false;
+        this.isMovingRight = false;
+        this.isJumping = false;
+        this.jumpStrength = 20;
+        this.jumpCount = 0;
+        this.maxJumps = 2;
+
+
+        window.addEventListener('keydown', (event) => {
+            if (event.code === 'ArrowRight') {
+                this.isMovingRight = true;
+            } else if (event.code === 'ArrowLeft') {
+                this.isMovingLeft = true;
+            } else if (event.code === 'Space' && this.jumpCount < 2) {
+                this.isJumping = true;
+                this.jumpCount++
+                this.speedY = -this.jumpStrength;
+            }
+        });
+
+        window.addEventListener('keyup', (event) => {
+            if (event.code === 'ArrowRight') {
+                this.isMovingRight = false;
+            } else if (event.code === 'ArrowLeft') {
+                this.isMovingLeft = false;
+            }
+        });
     }
 
-    update(){
-
-        this.x += this.speedX;
-        this.y += this.speedY;
-
-
-        if (this.game.keys.includes('ArrowRight')) {
-                this.speedX = 2;
-        } else if (this.game.keys.includes('ArrowLeft') && this.x >= 1){
-                this.speedX = -2;
+    update() {
+        if (this.isMovingRight) {
+            this.speedX = 3;
+        } else if (this.isMovingLeft) {
+            this.speedX = -3;
         } else {
             this.speedX = 0;
         }
 
-        if (this.game.keys.includes('ArrowUp')) {
-                this.speedY = -2;
-        } else if (this.game.keys.includes('ArrowDown') && this.game.height - this.y >= 101){
-                this.speedY = 2;
+
+        if (this.isJumping) {
+            this.speedY += this.game.gravity;
+            this.y += this.speedY;
+            if (this.y >= 924) {
+                this.y = 924;
+                this.isJumping = false;
+            }
         } else {
-            this.speedY = 0;
+
+            this.y += this.game.gravity;
+            if (this.y >= 924) {
+                this.y = 924;
+                this.jumpCount = 0;
+            }
         }
 
         this.x += this.speedX;
-        this.y += this.speedY;
     }
 
     draw(context: CanvasRenderingContext2D) {
