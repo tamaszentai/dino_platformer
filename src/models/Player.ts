@@ -21,11 +21,27 @@ export default class Player {
     }
 
     update(){
+
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+
         if (this.game.keys.includes('ArrowRight')) {
-            this.speedX = 2;
-        } else if (!this.game.keys.includes('ArrowRight')){
+                this.speedX = 2;
+        } else if (this.game.keys.includes('ArrowLeft') && this.x >= 1){
+                this.speedX = -2;
+        } else {
             this.speedX = 0;
         }
+
+        if (this.game.keys.includes('ArrowUp')) {
+                this.speedY = -2;
+        } else if (this.game.keys.includes('ArrowDown') && this.game.height - this.y >= 101){
+                this.speedY = 2;
+        } else {
+            this.speedY = 0;
+        }
+
         this.x += this.speedX;
         this.y += this.speedY;
     }
