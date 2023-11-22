@@ -15,6 +15,7 @@ export default class Player {
     jumpStrength: number;
     jumpCount: number;
     maxJumps: number;
+    floor: number;
 
     constructor(game: Game, playerName: string) {
         this.game = game;
@@ -31,6 +32,7 @@ export default class Player {
         this.jumpStrength = 20;
         this.jumpCount = 0;
         this.maxJumps = 2;
+        this.floor = 924;
 
 
         window.addEventListener('keydown', (event) => {
@@ -54,7 +56,15 @@ export default class Player {
         });
     }
 
+
+
     update() {
+        if ((this.y + this.height < this.game.platforms[0].y + this.game.platforms[0].height)&&(this.x + this.width >= this.game.platforms[0].x) && (this.x <= this.game.platforms[0].x + this.game.platforms[0].width)) {
+            this.floor = this.game.platforms[0].y - this.height;
+        } else {
+            this.floor = 924;
+        }
+
         if (this.isMovingRight) {
             this.speedX = 3;
         } else if (this.isMovingLeft) {
@@ -67,20 +77,24 @@ export default class Player {
         if (this.isJumping) {
             this.speedY += this.game.gravity;
             this.y += this.speedY;
-            if (this.y >= 924) {
-                this.y = 924;
+            if (this.y >= this.floor) {
+                this.y = this.floor;
                 this.isJumping = false;
             }
         } else {
 
             this.y += this.game.gravity;
-            if (this.y >= 924) {
-                this.y = 924;
+            if (this.y >= this.floor) {
+                this.y = this.floor;
                 this.jumpCount = 0;
             }
         }
 
+
+
         this.x += this.speedX;
+
+
     }
 
     draw(context: CanvasRenderingContext2D) {
