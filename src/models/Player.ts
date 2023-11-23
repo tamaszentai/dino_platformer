@@ -56,9 +56,7 @@ export default class Player {
   }
 
   update() {
-    //TODO platfroms swoop up player when player head touches the it
-    //TODO fix gravity when player is falling
-    let lowestFloor = this.floor;
+    let lowestFloor = 924;
 
     for (const platform of this.game.platforms) {
       if (
@@ -73,12 +71,8 @@ export default class Player {
       }
     }
 
-    if (lowestFloor !== this.floor) {
-      this.floor = lowestFloor;
-    } else {
-      this.floor = 924;
-      this.y += this.game.gravity;
-    }
+
+this.floor = lowestFloor;
 
     if (this.isMovingRight) {
       this.speedX = 3;
@@ -102,6 +96,8 @@ export default class Player {
         this.jumpCount = 0;
       }
     }
+
+
 
     this.x += this.speedX;
   }
