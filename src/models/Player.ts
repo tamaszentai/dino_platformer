@@ -34,12 +34,15 @@ export default class Player {
     this.maxJumps = 2;
     this.floor = 924;
 
+
     window.addEventListener("keydown", (event) => {
       if (event.code === "ArrowRight") {
         this.isMovingRight = true;
       } else if (event.code === "ArrowLeft") {
         this.isMovingLeft = true;
       } else if (event.code === "Space" && this.jumpCount < 2) {
+        const jumpAudio = new Audio('src/assets/sounds/jump.mp3');
+        jumpAudio.play().then(res => console.log(res)).catch(err => console.log(err));
         this.isJumping = true;
         this.jumpCount++;
         this.speedY = -this.jumpStrength;
@@ -53,6 +56,8 @@ export default class Player {
         this.isMovingLeft = false;
       }
     });
+
+
   }
 
   update() {
@@ -71,8 +76,14 @@ export default class Player {
       }
     }
 
+    this.floor = lowestFloor;
+    // --- Falling off from platforms start
+    if (lowestFloor > this.y && !this.isJumping) {
+      this.speedY += 0.1;
+      this.y += this.speedY;
+    }
+    // --- end
 
-this.floor = lowestFloor;
 
     if (this.isMovingRight) {
       this.speedX = 3;
@@ -96,8 +107,6 @@ this.floor = lowestFloor;
         this.jumpCount = 0;
       }
     }
-
-
 
     this.x += this.speedX;
   }
