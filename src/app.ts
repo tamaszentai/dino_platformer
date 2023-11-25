@@ -8,7 +8,6 @@ const viewPortCanvas = document.getElementById(
 const viewPortCtx = viewPortCanvas.getContext("2d")!;
 const backgroundImage = new Image();
 backgroundImage.src = "src/assets/images/winter8.jpg";
-console.log(mainCanvas.width);
 
 const game = new Game(mainCanvas.width, mainCanvas.height, "Tamas");
 

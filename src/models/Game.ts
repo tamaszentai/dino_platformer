@@ -17,7 +17,7 @@ export default class Game {
         this.width = width;
         this.height = height;
         this.gravity = 0.5;
-        this.gameHeight = 1000;
+        this.gameHeight = 4976;
         this.platforms = []
         for (let i = 0; i < 10; i++) {
             this.platforms.push(new Platform(this));
@@ -31,14 +31,17 @@ export default class Game {
     }
 
     draw(mainContext: CanvasRenderingContext2D, viewPortContext: CanvasRenderingContext2D) {
-        if (this.player.y < viewPortContext.canvas.height / 2) {
-            this.gameHeight++
-        }
-
         const mainWidth = mainContext.canvas.width;
         const mainHeight = mainContext.canvas.height;
         const viewPortWidth = viewPortContext.canvas.width;
         const viewPortHeight = viewPortContext.canvas.height;
+
+        if ((mainHeight - this.player.height) - this.player.y >= viewPortHeight / 2) {
+            console.log("nyam");
+            this.gameHeight --;
+        } else if ((mainHeight - this.player.height) - this.player.y < 0){
+            this.gameHeight++;
+        }
 
 
         mainContext.drawImage(backgroundImage, 0, 0);
@@ -53,10 +56,10 @@ export default class Game {
 
         viewPortContext.drawImage(
             mainContext.canvas, // forrás canvas
-            0, 4976, // forrás kezdőpontja a közepéhez igazítva
-            mainContext.canvas.width, viewPortContext.canvas.height, // forrás mérete a viewPort méretéhez igazítva
+            0, this.gameHeight, // forrás kezdőpontja a közepéhez igazítva
+            mainWidth, viewPortHeight, // forrás mérete a viewPort méretéhez igazítva
             0, 0, // cél kezdőpontja
-            viewPortContext.canvas.width, viewPortContext.canvas.height // cél mérete (teljes viewPort)
+            viewPortWidth, viewPortHeight // cél mérete (teljes viewPort)
         );
     }
 }
