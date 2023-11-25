@@ -114,7 +114,7 @@ export default class Player {
   draw(context: CanvasRenderingContext2D) {
     context.beginPath();
     context.rect(this.x, this.y, this.width, this.height);
-    context.fillStyle = "#000";
+    context.fillStyle = "salmon";
     context.fill();
   }
 }
