@@ -1,22 +1,21 @@
 import Game from "./models/Game.js";
 
-const canvas = document.getElementById('canvas') as HTMLCanvasElement;
-const ctx = canvas.getContext('2d')!;
+const mainCanvas = document.getElementById("mainCanvas") as HTMLCanvasElement;
+const mainCtx = mainCanvas.getContext("2d")!;
+const viewPortCanvas = document.getElementById(
+  "viewPortCanvas",
+) as HTMLCanvasElement;
+const viewPortCtx = viewPortCanvas.getContext("2d")!;
 const backgroundImage = new Image();
-backgroundImage.src = 'src/assets/images/winter8.jpg';
-canvas.width = 1280;
-canvas.height = 1024;
+backgroundImage.src = "src/assets/images/winter8.jpg";
+console.log(mainCanvas.width);
 
-
-const game = new Game(canvas.width, canvas.height, 'Tamas')
-
+const game = new Game(mainCanvas.width, mainCanvas.height, "Tamas");
 
 const animate = () => {
-    ctx.clearRect(0,0, canvas.width, canvas.height)
-    game.update();
-    game.draw(ctx);
-    requestAnimationFrame(animate);
-}
+  viewPortCtx.clearRect(0, 0, viewPortCanvas.width, viewPortCanvas.height);
+  game.update();
+  game.draw(mainCtx, viewPortCtx);
+  requestAnimationFrame(animate);
+};
 animate();
-
-

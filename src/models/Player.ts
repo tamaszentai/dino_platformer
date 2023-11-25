@@ -23,7 +23,7 @@ export default class Player {
     this.height = 100;
     this.width = 50;
     this.x = 0;
-    this.y = 924;
+    this.y = 6000;
     this.speedY = 0;
     this.speedX = 0;
     this.isMovingLeft = false;
@@ -61,7 +61,7 @@ export default class Player {
   }
 
   update() {
-    let lowestFloor = 924;
+    let lowestFloor = 5900;
 
     for (const platform of this.game.platforms) {
       if (
