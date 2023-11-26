@@ -32,7 +32,7 @@ export default class Player {
     this.jumpStrength = 20;
     this.jumpCount = 0;
     this.maxJumps = 2;
-    this.floor = 924;
+    this.floor = 5924;
 
 
     window.addEventListener("keydown", (event) => {
@@ -42,7 +42,7 @@ export default class Player {
         this.isMovingLeft = true;
       } else if (event.code === "Space" && this.jumpCount < 2) {
         const jumpAudio = new Audio('src/assets/sounds/jump.mp3');
-        jumpAudio.play().then(res => console.log(res)).catch(err => console.log(err));
+        jumpAudio.play().then().catch(err => console.log(err));
         this.isJumping = true;
         this.jumpCount++;
         this.speedY = -this.jumpStrength;

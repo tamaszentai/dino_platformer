@@ -11,7 +11,7 @@ export default class Platform {
         this.game = game;
         this.height = 10;
         this.width = 100;
-        this.y = this.randomIntFromInterval(5500, 6000);
+        this.y = this.randomIntFromInterval(5500, 0);
         this.x = this.randomIntFromInterval(0, this.game.width);
     }
 
