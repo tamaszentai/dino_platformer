@@ -1,0 +1,12 @@
+html, body {
+    overflow: hidden;
+    background: #f2f2a5
+}
+
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}

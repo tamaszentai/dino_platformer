@@ -1,81 +1,51 @@
 import Player from "./Player.js";
 import InputHandler from "./InputHandler.js";
 import Platform from "./Platform.js";
-const backgroundImage = new Image();
-backgroundImage.src = 'src/assets/images/winter8.jpg';
 
 export default class Game {
     width: number;
     height: number;
     gravity: number;
-    gameHeight: number;
     platforms: Platform[];
     player: Player;
     inputHandler: InputHandler;
+    backgroundImage: HTMLImageElement;
+    backgroundStartY: number;
+    backgroundPositionY: number;
+
 
     constructor(width: number, height: number, playerName: string) {
         this.width = width;
         this.height = height;
         this.gravity = 0.5;
-        this.gameHeight = 4976;
         this.platforms = []
-        for (let i = 0; i < 50; i++) {
-            this.platforms.push(new Platform(this));
-        }
         this.player = new Player(this, playerName);
         this.inputHandler = new InputHandler(this);
+        this.backgroundStartY = 0;
+        this.backgroundImage = new Image();
+        this.backgroundImage.src = 'src/assets/images/clouds.jpg';
+        this.backgroundPositionY = 0;
+    }
+
+    addPlatforms() {
+        for (let i = 0; i < 1; i++) {
+            this.platforms.push(new Platform(this));
+        }
     }
 
     update() {
         this.player.update();
     }
 
-    draw(mainContext: CanvasRenderingContext2D, viewPortContext: CanvasRenderingContext2D) {
-        const mainWidth = mainContext.canvas.width;
-        const mainHeight = mainContext.canvas.height;
-        const viewPortWidth = viewPortContext.canvas.width;
-        const viewPortHeight = viewPortContext.canvas.height;
+    draw(mainContext: CanvasRenderingContext2D) {
+        mainContext.drawImage(this.backgroundImage, 0, this.backgroundPositionY);
+        mainContext.drawImage(this.backgroundImage, 0, this.backgroundPositionY - this.backgroundImage.height);
 
+        this.backgroundPositionY += 1;
 
-        let following = this.gameHeight - ((mainHeight - this.player.y - 512));
-
-        console.log(this.player.y);
-
-
-        // if (this.player.isJumping) {
-        //     this.gameHeight -= 5;
-        // } else {
-        //     this.gameHeight += 5;
-        // }
-
-
-
-
-
-        // if ((mainHeight - this.player.height) - this.player.y >= viewPortHeight / 2) {
-        //     console.log("nyam");
-        //     this.gameHeight --;
-        // } else if ((mainHeight - this.player.height) - this.player.y < 0){
-        //     this.gameHeight ++;
-        // }
-
-
-        mainContext.drawImage(backgroundImage, 0, 0);
-
-
-
-        this.platforms.forEach(platform => {
-            platform.draw(mainContext);
-        });
-
+        if (this.backgroundPositionY >= this.backgroundImage.height) {
+            this.backgroundPositionY = 0;
+        }
         this.player.draw(mainContext);
-
-        viewPortContext.drawImage(
-            mainContext.canvas, // forrás canvas
-            0, following, // forrás kezdőpontja a közepéhez igazítva // this.gameHeight
-            mainWidth, viewPortHeight, // forrás mérete a viewPort méretéhez igazítva
-            0, 0, // cél kezdőpontja
-            viewPortWidth, viewPortHeight // cél mérete (teljes viewPort)
-        );
     }
 }

@@ -16,14 +16,17 @@ export default class Player {
   jumpCount: number;
   maxJumps: number;
   floor: number;
+  spriteRunImages: HTMLImageElement[];
+  currentRunImage: number;
+  animationSpeed: number;
 
   constructor(game: Game, playerName: string) {
     this.game = game;
     this.playerName = playerName;
-    this.height = 100;
+    this.height = 50;
     this.width = 50;
     this.x = 0;
-    this.y = 6000;
+    this.y = game.height - this.height;
     this.speedY = 0;
     this.speedX = 0;
     this.isMovingLeft = false;
@@ -32,8 +35,10 @@ export default class Player {
     this.jumpStrength = 20;
     this.jumpCount = 0;
     this.maxJumps = 2;
-    this.floor = 5924;
-
+    this.floor = game.height - this.height;
+    this.spriteRunImages = [];
+    this.currentRunImage = 0;
+    this.animationSpeed = 1000; // Adjust animation speed here
 
     window.addEventListener("keydown", (event) => {
       if (event.code === "ArrowRight") {
@@ -57,17 +62,25 @@ export default class Player {
       }
     });
 
+    this.preloadRunImages();
+  }
 
+  preloadRunImages() {
+    for (let i = 1; i <= 8; i++) {
+      const img = new Image();
+      img.src = `src/assets/sprites/run/Run (${i}).png`;
+      this.spriteRunImages.push(img);
+    }
   }
 
   update() {
-    let lowestFloor = 5900;
+    let lowestFloor = this.game.height - this.height;
 
     for (const platform of this.game.platforms) {
       if (
-        this.y + this.height < platform.y + platform.height &&
-        this.x + this.width >= platform.x &&
-        this.x <= platform.x + platform.width
+          this.y + this.height < platform.y + platform.height &&
+          this.x + this.width >= platform.x &&
+          this.x <= platform.x + platform.width
       ) {
         const platformTop = platform.y - this.height;
         if (platformTop < lowestFloor) {
@@ -77,13 +90,11 @@ export default class Player {
     }
 
     this.floor = lowestFloor;
-    // --- Falling off from platforms start
+
     if (lowestFloor > this.y && !this.isJumping) {
       this.speedY += 0.1;
       this.y += this.speedY;
     }
-    // --- end
-
 
     if (this.isMovingRight) {
       this.speedX = 3;
@@ -109,9 +120,19 @@ export default class Player {
     }
 
     this.x += this.speedX;
+
+
+
   }
 
   draw(context: CanvasRenderingContext2D) {
+    // if (this.isMovingRight) {
+    //   context.drawImage(this.spriteRunImages[this.currentRunImage], this.x, this.y, this.width, this.height);
+    // }
+    //
+    // if (this.isMovingLeft) {
+    //   context.drawImage(this.spriteRunImages[this.currentRunImage], this.x, this.y, this.width, this.height);
+    // }
     context.beginPath();
     context.rect(this.x, this.y, this.width, this.height);
     context.fillStyle = "salmon";
