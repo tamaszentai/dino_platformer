@@ -18,9 +18,11 @@ export default class Player {
   floor: number;
   idleImages: HTMLImageElement[];
   runImages: HTMLImageElement[];
+  runLeftImages: HTMLImageElement[];
   jumpImages: HTMLImageElement[];
   currentIdleImage: number;
   currentRunImage: number;
+  currentRunLeftImage: number;
   currentJumpImage: number;
 
   constructor(game: Game, playerName: string) {
@@ -41,13 +43,16 @@ export default class Player {
     this.floor = game.height - this.height;
     this.idleImages = [];
     this.runImages = [];
+    this.runLeftImages = [];
     this.jumpImages = [];
     this.currentIdleImage = 0;
     this.currentRunImage = 0;
+    this.currentRunLeftImage = 0;
     this.currentJumpImage = 0;
 
     this.preloadIdleImages();
     this.preloadRunImages();
+    this.preloadRunLeftImages();
     this.preloadJumpImages();
 
     window.addEventListener("keydown", (event) => {
@@ -56,8 +61,11 @@ export default class Player {
       } else if (event.code === "ArrowLeft") {
         this.isMovingLeft = true;
       } else if (event.code === "Space" && this.jumpCount < 2) {
-        const jumpAudio = new Audio('src/assets/sounds/jump.mp3');
-        jumpAudio.play().then().catch(err => console.log(err));
+        const jumpAudio = new Audio("src/assets/sounds/jump.mp3");
+        jumpAudio
+          .play()
+          .then()
+          .catch((err) => console.log(err));
         this.isJumping = true;
         this.jumpCount++;
         this.speedY = -this.jumpStrength;
@@ -71,8 +79,6 @@ export default class Player {
         this.isMovingLeft = false;
       }
     });
-
-console.log(this.runImages);
   }
 
   preloadIdleImages() {
@@ -91,6 +97,14 @@ console.log(this.runImages);
     }
   }
 
+  preloadRunLeftImages() {
+    for (let i = 1; i <= 8; i++) {
+      const img = new Image();
+      img.src = `src/assets/sprites/runLeft/Run (${i}).png`;
+      this.runLeftImages.push(img);
+    }
+  }
+
   preloadJumpImages() {
     for (let i = 1; i <= 12; i++) {
       const img = new Image();
@@ -104,9 +118,9 @@ console.log(this.runImages);
 
     for (const platform of this.game.platforms) {
       if (
-          this.y + this.height < platform.y + platform.height &&
-          this.x + this.width >= platform.x &&
-          this.x <= platform.x + platform.width
+        this.y + this.height < platform.y + platform.height &&
+        this.x + this.width >= platform.x &&
+        this.x <= platform.x + platform.width
       ) {
         const platformTop = platform.y - this.height;
         if (platformTop < lowestFloor) {
@@ -146,51 +160,82 @@ console.log(this.runImages);
     }
 
     this.x += this.speedX;
-
-
-
   }
 
   draw(context: CanvasRenderingContext2D) {
-    if (this.isJumping && !this.isMovingRight) {
-      if(this.game.animationSpeed % 8 === 0) {
-        this.currentJumpImage++
+    if (this.isJumping) {
+      if (this.game.animationSpeed % 8 === 0) {
+        this.currentJumpImage++;
       }
 
-      if(this.currentJumpImage >= this.jumpImages.length) {
+      if (this.currentJumpImage >= this.jumpImages.length) {
         this.currentJumpImage = 0;
       }
 
-      context.drawImage(this.jumpImages[this.currentJumpImage], this.x, this.y - 22 , 100, 80)
-    } else if (!this.isJumping && !this.isMovingRight) {
+      context.drawImage(
+        this.jumpImages[this.currentJumpImage],
+        this.x,
+        this.y - 22,
+        100,
+        80,
+      );
+    } else {
       // TODO fine tuning jumping
     }
 
+    if (!this.isJumping) {
+      if (this.isMovingRight) {
+        if (this.game.animationSpeed % 8 === 0) {
+          this.currentRunImage++;
+        }
 
-    if(this.isMovingRight) {
-      if(this.game.animationSpeed % 8 === 0) {
-        this.currentRunImage++
+        if (this.currentRunImage >= this.runImages.length) {
+          this.currentRunImage = 0;
+        }
+
+        context.drawImage(
+          this.runImages[this.currentRunImage],
+          this.x,
+          this.y - 22,
+          100,
+          80,
+        );
+      }
+      if (this.isMovingLeft) {
+        if (this.game.animationSpeed % 8 === 0) {
+          this.currentRunLeftImage++;
+        }
+
+        if (this.currentRunLeftImage >= this.runLeftImages.length) {
+          this.currentRunLeftImage = 0;
+        }
+
+        context.drawImage(
+          this.runLeftImages[this.currentRunLeftImage],
+          this.x,
+          this.y - 22,
+          100,
+          80,
+        );
       }
 
-      if(this.currentRunImage >= this.runImages.length) {
-        this.currentRunImage = 0;
+      if (!this.isMovingRight && !this.isMovingLeft && !this.isJumping) {
+        if (this.game.animationSpeed % 6 === 0) {
+          this.currentIdleImage++;
+        }
+
+        if (this.currentIdleImage === this.idleImages.length) {
+          this.currentIdleImage = 0;
+        }
+
+        context.drawImage(
+          this.idleImages[this.currentIdleImage],
+          this.x,
+          this.y - 22,
+          100,
+          80,
+        );
       }
-
-      context.drawImage(this.runImages[this.currentRunImage], this.x, this.y - 22 , 100, 80)
-    } else if(!this.isJumping) {
-
-      if (this.game.animationSpeed % 6 === 0) {
-        this.currentIdleImage++
-      }
-
-      if(this.currentIdleImage === this.idleImages.length) {
-        this.currentIdleImage = 0;
-      }
-
-      context.drawImage(this.idleImages[this.currentIdleImage], this.x, this.y - 22 , 100, 80)
     }
-
-
-
   }
 }
