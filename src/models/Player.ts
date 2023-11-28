@@ -43,6 +43,7 @@ export default class Player {
     this.currentRunImage = 0;
 
     this.preloadIdleImages();
+    this.preloadRunImages();
 
     window.addEventListener("keydown", (event) => {
       if (event.code === "ArrowRight") {
@@ -66,7 +67,7 @@ export default class Player {
       }
     });
 
-
+console.log(this.runImages);
   }
 
   preloadIdleImages() {
@@ -74,6 +75,14 @@ export default class Player {
       const img = new Image();
       img.src = `src/assets/sprites/idle/Idle (${i}).png`;
       this.idleImages.push(img);
+    }
+  }
+
+  preloadRunImages() {
+    for (let i = 1; i <= 8; i++) {
+      const img = new Image();
+      img.src = `src/assets/sprites/run/Run (${i}).png`;
+      this.runImages.push(img);
     }
   }
 
@@ -138,6 +147,21 @@ export default class Player {
       this.currentIdleImage = 0;
     }
 
-    context.drawImage(this.idleImages[this.currentIdleImage], this.x, this.y - 22 , 100, 80)
+
+    if(this.isMovingRight) {
+      if(this.game.animationSpeed % 8 === 0) {
+        this.currentRunImage++
+      }
+
+      if(this.currentRunImage >= this.runImages.length) {
+        this.currentRunImage = 0;
+      }
+      context.drawImage(this.runImages[this.currentRunImage], this.x, this.y - 22 , 100, 80)
+    } else {
+      context.drawImage(this.idleImages[this.currentIdleImage], this.x, this.y - 22 , 100, 80)
+    }
+
+
+
   }
 }
