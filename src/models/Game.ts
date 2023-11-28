@@ -12,6 +12,7 @@ export default class Game {
     backgroundImage: HTMLImageElement;
     backgroundStartY: number;
     backgroundPositionY: number;
+    animationSpeed: number;
 
 
     constructor(width: number, height: number, playerName: string) {
@@ -25,6 +26,12 @@ export default class Game {
         this.backgroundImage = new Image();
         this.backgroundImage.src = 'src/assets/images/clouds.jpg';
         this.backgroundPositionY = 0;
+        this.animationSpeed = 5;
+
+        for (let i = 0; i < 10; i++) {
+            this.platforms.push(new Platform(this));
+        }
+
     }
 
     addPlatforms() {
@@ -41,11 +48,15 @@ export default class Game {
         mainContext.drawImage(this.backgroundImage, 0, this.backgroundPositionY);
         mainContext.drawImage(this.backgroundImage, 0, this.backgroundPositionY - this.backgroundImage.height);
 
-        this.backgroundPositionY += 1;
+        this.backgroundPositionY += 2;
 
         if (this.backgroundPositionY >= this.backgroundImage.height) {
             this.backgroundPositionY = 0;
         }
+
+        this.platforms.forEach(platform => {
+            platform.draw(mainContext);
+        })
         this.player.draw(mainContext);
     }
 }

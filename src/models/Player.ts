@@ -16,9 +16,10 @@ export default class Player {
   jumpCount: number;
   maxJumps: number;
   floor: number;
-  spriteRunImages: HTMLImageElement[];
+  idleImages: HTMLImageElement[];
+  runImages: HTMLImageElement[];
+  currentIdleImage: 0;
   currentRunImage: number;
-  animationSpeed: number;
 
   constructor(game: Game, playerName: string) {
     this.game = game;
@@ -32,13 +33,16 @@ export default class Player {
     this.isMovingLeft = false;
     this.isMovingRight = false;
     this.isJumping = false;
-    this.jumpStrength = 20;
+    this.jumpStrength = 17;
     this.jumpCount = 0;
     this.maxJumps = 2;
     this.floor = game.height - this.height;
-    this.spriteRunImages = [];
+    this.idleImages = [];
+    this.runImages = [];
+    this.currentIdleImage = 0;
     this.currentRunImage = 0;
-    this.animationSpeed = 1000; // Adjust animation speed here
+
+    this.preloadIdleImages();
 
     window.addEventListener("keydown", (event) => {
       if (event.code === "ArrowRight") {
@@ -62,14 +66,14 @@ export default class Player {
       }
     });
 
-    this.preloadRunImages();
+
   }
 
-  preloadRunImages() {
-    for (let i = 1; i <= 8; i++) {
+  preloadIdleImages() {
+    for (let i = 1; i <= 10; i++) {
       const img = new Image();
-      img.src = `src/assets/sprites/run/Run (${i}).png`;
-      this.spriteRunImages.push(img);
+      img.src = `src/assets/sprites/idle/Idle (${i}).png`;
+      this.idleImages.push(img);
     }
   }
 
@@ -126,16 +130,14 @@ export default class Player {
   }
 
   draw(context: CanvasRenderingContext2D) {
-    // if (this.isMovingRight) {
-    //   context.drawImage(this.spriteRunImages[this.currentRunImage], this.x, this.y, this.width, this.height);
-    // }
-    //
-    // if (this.isMovingLeft) {
-    //   context.drawImage(this.spriteRunImages[this.currentRunImage], this.x, this.y, this.width, this.height);
-    // }
-    context.beginPath();
-    context.rect(this.x, this.y, this.width, this.height);
-    context.fillStyle = "salmon";
-    context.fill();
+    if (this.game.animationSpeed % 6 === 0) {
+      this.currentIdleImage++
+    }
+
+    if(this.currentIdleImage === this.idleImages.length) {
+      this.currentIdleImage = 0;
+    }
+
+    context.drawImage(this.idleImages[this.currentIdleImage], this.x, this.y - 22 , 100, 80)
   }
 }
