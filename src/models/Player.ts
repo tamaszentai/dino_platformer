@@ -17,13 +17,16 @@ export default class Player {
   maxJumps: number;
   floor: number;
   idleImages: HTMLImageElement[];
+  idleLeftImages: HTMLImageElement[];
   runImages: HTMLImageElement[];
   runLeftImages: HTMLImageElement[];
   jumpImages: HTMLImageElement[];
   currentIdleImage: number;
+  currentIdleLeftImage: number;
   currentRunImage: number;
   currentRunLeftImage: number;
   currentJumpImage: number;
+  isRightOrientation: boolean;
 
   constructor(game: Game, playerName: string) {
     this.game = game;
@@ -42,15 +45,19 @@ export default class Player {
     this.maxJumps = 2;
     this.floor = game.height - this.height;
     this.idleImages = [];
+    this.idleLeftImages = [];
     this.runImages = [];
     this.runLeftImages = [];
     this.jumpImages = [];
     this.currentIdleImage = 0;
+    this.currentIdleLeftImage = 0;
     this.currentRunImage = 0;
     this.currentRunLeftImage = 0;
     this.currentJumpImage = 0;
+    this.isRightOrientation = true;
 
     this.preloadIdleImages();
+    this.preloadIdleLeftImages();
     this.preloadRunImages();
     this.preloadRunLeftImages();
     this.preloadJumpImages();
@@ -86,6 +93,14 @@ export default class Player {
       const img = new Image();
       img.src = `src/assets/sprites/idle/Idle (${i}).png`;
       this.idleImages.push(img);
+    }
+  }
+
+  preloadIdleLeftImages() {
+    for (let i = 1; i <= 10; i++) {
+      const img = new Image();
+      img.src = `src/assets/sprites/idleLeft/Idle (${i}).png`;
+      this.idleLeftImages.push(img);
     }
   }
 
@@ -185,6 +200,7 @@ export default class Player {
 
     if (!this.isJumping) {
       if (this.isMovingRight) {
+        this.isRightOrientation = true;
         if (this.game.animationSpeed % 8 === 0) {
           this.currentRunImage++;
         }
@@ -202,6 +218,7 @@ export default class Player {
         );
       }
       if (this.isMovingLeft) {
+        this.isRightOrientation = false;
         if (this.game.animationSpeed % 8 === 0) {
           this.currentRunLeftImage++;
         }
@@ -219,7 +236,7 @@ export default class Player {
         );
       }
 
-      if (!this.isMovingRight && !this.isMovingLeft && !this.isJumping) {
+      if (!this.isMovingRight && !this.isMovingLeft && !this.isJumping && this.isRightOrientation) {
         if (this.game.animationSpeed % 6 === 0) {
           this.currentIdleImage++;
         }
@@ -234,6 +251,24 @@ export default class Player {
           this.y - 22,
           100,
           80,
+        );
+      }
+
+      if (!this.isMovingRight && !this.isMovingLeft && !this.isJumping && !this.isRightOrientation) {
+        if (this.game.animationSpeed % 6 === 0) {
+          this.currentIdleLeftImage++;
+        }
+
+        if (this.currentIdleLeftImage === this.idleLeftImages.length) {
+          this.currentIdleLeftImage = 0;
+        }
+
+        context.drawImage(
+            this.idleLeftImages[this.currentIdleLeftImage],
+            this.x,
+            this.y - 22,
+            100,
+            80,
         );
       }
     }
