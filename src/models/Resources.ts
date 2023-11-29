@@ -2,6 +2,7 @@ export default class Resources {
     backgroundImage: HTMLImageElement;
     gameTheme: HTMLAudioElement;
     jumpSound: HTMLAudioElement;
+    platformImages: HTMLImageElement[];
     idleImages: HTMLImageElement[];
     idleLeftImages: HTMLImageElement[];
     runImages: HTMLImageElement[];
@@ -16,6 +17,7 @@ export default class Resources {
         this.gameTheme.volume = 0.2;
         this.jumpSound = this.loadAudio('src/assets/sounds/jump.mp3');
         this.jumpSound.volume = 0.1;
+        this.platformImages = this.preloadImages('platform', 3);
         this.idleImages = this.preloadImages('idle', 10);
         this.idleLeftImages = this.preloadImages('idleLeft', 10);
         this.runImages = this.preloadImages('run', 8);

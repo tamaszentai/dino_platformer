@@ -11,7 +11,7 @@ export default class Platform {
         this.game = game;
         this.height = 10;
         this.width = 100;
-        this.y = this.randomIntFromInterval(300, 0);
+        this.y = this.randomIntFromInterval(800, 500);
         this.x = this.randomIntFromInterval(0, this.game.width);
     }
 
@@ -22,7 +22,7 @@ export default class Platform {
 
     draw(context: CanvasRenderingContext2D) {
         context.beginPath();
-        context.rect(this.x, this.y += 2, this.width, this.height);
+        context.rect(this.x, this.y, this.width, this.height);
         context.fillStyle = "yellow";
         context.fill();
     }
