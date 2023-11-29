@@ -16,16 +16,12 @@ export default class Player {
   jumpCount: number;
   maxJumps: number;
   floor: number;
-  idleImages: HTMLImageElement[];
-  idleLeftImages: HTMLImageElement[];
-  runImages: HTMLImageElement[];
-  runLeftImages: HTMLImageElement[];
-  jumpImages: HTMLImageElement[];
   currentIdleImage: number;
   currentIdleLeftImage: number;
   currentRunImage: number;
   currentRunLeftImage: number;
   currentJumpImage: number;
+  currentJumpLeftImage: number;
   isRightOrientation: boolean;
 
   constructor(game: Game, playerName: string) {
@@ -44,23 +40,13 @@ export default class Player {
     this.jumpCount = 0;
     this.maxJumps = 2;
     this.floor = game.height - this.height;
-    this.idleImages = [];
-    this.idleLeftImages = [];
-    this.runImages = [];
-    this.runLeftImages = [];
-    this.jumpImages = [];
     this.currentIdleImage = 0;
     this.currentIdleLeftImage = 0;
     this.currentRunImage = 0;
     this.currentRunLeftImage = 0;
     this.currentJumpImage = 0;
+    this.currentJumpLeftImage = 0;
     this.isRightOrientation = true;
-
-    this.preloadIdleImages();
-    this.preloadIdleLeftImages();
-    this.preloadRunImages();
-    this.preloadRunLeftImages();
-    this.preloadJumpImages();
 
     window.addEventListener("keydown", (event) => {
       if (event.code === "ArrowRight") {
@@ -68,12 +54,11 @@ export default class Player {
       } else if (event.code === "ArrowLeft") {
         this.isMovingLeft = true;
       } else if (event.code === "Space" && this.jumpCount < 2) {
-        const jumpAudio = new Audio("src/assets/sounds/jump.mp3");
-        jumpAudio
+        this.isJumping = true;
+        this.game.resources.jumpSound
           .play()
           .then()
-          .catch((err) => console.log(err));
-        this.isJumping = true;
+          .catch((err: Error) => console.log(err));
         this.jumpCount++;
         this.speedY = -this.jumpStrength;
       }
@@ -86,46 +71,6 @@ export default class Player {
         this.isMovingLeft = false;
       }
     });
-  }
-
-  preloadIdleImages() {
-    for (let i = 1; i <= 10; i++) {
-      const img = new Image();
-      img.src = `src/assets/sprites/idle/Idle (${i}).png`;
-      this.idleImages.push(img);
-    }
-  }
-
-  preloadIdleLeftImages() {
-    for (let i = 1; i <= 10; i++) {
-      const img = new Image();
-      img.src = `src/assets/sprites/idleLeft/Idle (${i}).png`;
-      this.idleLeftImages.push(img);
-    }
-  }
-
-  preloadRunImages() {
-    for (let i = 1; i <= 8; i++) {
-      const img = new Image();
-      img.src = `src/assets/sprites/run/Run (${i}).png`;
-      this.runImages.push(img);
-    }
-  }
-
-  preloadRunLeftImages() {
-    for (let i = 1; i <= 8; i++) {
-      const img = new Image();
-      img.src = `src/assets/sprites/runLeft/Run (${i}).png`;
-      this.runLeftImages.push(img);
-    }
-  }
-
-  preloadJumpImages() {
-    for (let i = 1; i <= 12; i++) {
-      const img = new Image();
-      img.src = `src/assets/sprites/jump/Jump (${i}).png`;
-      this.jumpImages.push(img);
-    }
   }
 
   update() {
@@ -152,8 +97,10 @@ export default class Player {
     }
 
     if (this.isMovingRight) {
+      this.isRightOrientation = true;
       this.speedX = 3;
     } else if (this.isMovingLeft) {
+      this.isRightOrientation = false;
       this.speedX = -3;
     } else {
       this.speedX = 0;
@@ -178,17 +125,17 @@ export default class Player {
   }
 
   draw(context: CanvasRenderingContext2D) {
-    if (this.isJumping) {
+    if (this.isJumping && this.isRightOrientation) {
       if (this.game.animationSpeed % 8 === 0) {
         this.currentJumpImage++;
       }
 
-      if (this.currentJumpImage >= this.jumpImages.length) {
+      if (this.currentJumpImage >= this.game.resources.jumpImages.length) {
         this.currentJumpImage = 0;
       }
 
       context.drawImage(
-        this.jumpImages[this.currentJumpImage],
+        this.game.resources.jumpImages[this.currentJumpImage],
         this.x,
         this.y - 22,
         100,
@@ -198,19 +145,39 @@ export default class Player {
       // TODO fine tuning jumping
     }
 
+    if (this.isJumping && !this.isRightOrientation) {
+      if (this.game.animationSpeed % 8 === 0) {
+        this.currentJumpLeftImage++;
+      }
+
+      if (this.currentJumpLeftImage >= this.game.resources.jumpLeftImages.length) {
+        this.currentJumpLeftImage = 0;
+      }
+
+      context.drawImage(
+          this.game.resources.jumpLeftImages[this.currentJumpLeftImage],
+          this.x,
+          this.y - 22,
+          100,
+          80,
+      );
+    } else {
+      // TODO fine tuning jumping
+    }
+
+
     if (!this.isJumping) {
       if (this.isMovingRight) {
-        this.isRightOrientation = true;
         if (this.game.animationSpeed % 8 === 0) {
           this.currentRunImage++;
         }
 
-        if (this.currentRunImage >= this.runImages.length) {
+        if (this.currentRunImage >= this.game.resources.runImages.length) {
           this.currentRunImage = 0;
         }
 
         context.drawImage(
-          this.runImages[this.currentRunImage],
+          this.game.resources.runImages[this.currentRunImage],
           this.x,
           this.y - 22,
           100,
@@ -218,17 +185,16 @@ export default class Player {
         );
       }
       if (this.isMovingLeft) {
-        this.isRightOrientation = false;
         if (this.game.animationSpeed % 8 === 0) {
           this.currentRunLeftImage++;
         }
 
-        if (this.currentRunLeftImage >= this.runLeftImages.length) {
+        if (this.currentRunLeftImage >= this.game.resources.runLeftImages.length) {
           this.currentRunLeftImage = 0;
         }
 
         context.drawImage(
-          this.runLeftImages[this.currentRunLeftImage],
+          this.game.resources.runLeftImages[this.currentRunLeftImage],
           this.x,
           this.y - 22,
           100,
@@ -241,12 +207,12 @@ export default class Player {
           this.currentIdleImage++;
         }
 
-        if (this.currentIdleImage === this.idleImages.length) {
+        if (this.currentIdleImage === this.game.resources.idleImages.length) {
           this.currentIdleImage = 0;
         }
 
         context.drawImage(
-          this.idleImages[this.currentIdleImage],
+          this.game.resources.idleImages[this.currentIdleImage],
           this.x,
           this.y - 22,
           100,
@@ -259,12 +225,12 @@ export default class Player {
           this.currentIdleLeftImage++;
         }
 
-        if (this.currentIdleLeftImage === this.idleLeftImages.length) {
+        if (this.currentIdleLeftImage === this.game.resources.idleLeftImages.length) {
           this.currentIdleLeftImage = 0;
         }
 
         context.drawImage(
-            this.idleLeftImages[this.currentIdleLeftImage],
+            this.game.resources.idleLeftImages[this.currentIdleLeftImage],
             this.x,
             this.y - 22,
             100,

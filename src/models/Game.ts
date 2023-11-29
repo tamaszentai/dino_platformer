@@ -1,3 +1,4 @@
+import Resources from "./Resources.js";
 import Player from "./Player.js";
 import InputHandler from "./InputHandler.js";
 import Platform from "./Platform.js";
@@ -6,10 +7,10 @@ export default class Game {
     width: number;
     height: number;
     gravity: number;
+    resources: Resources;
     platforms: Platform[];
     player: Player;
     inputHandler: InputHandler;
-    backgroundImage: HTMLImageElement;
     backgroundStartY: number;
     backgroundPositionY: number;
     animationSpeed: number;
@@ -19,14 +20,17 @@ export default class Game {
         this.width = width;
         this.height = height;
         this.gravity = 0.5;
+        this.resources = new Resources();
         this.platforms = []
         this.player = new Player(this, playerName);
         this.inputHandler = new InputHandler(this);
         this.backgroundStartY = 0;
-        this.backgroundImage = new Image();
-        this.backgroundImage.src = 'src/assets/images/clouds.jpg';
         this.backgroundPositionY = 0;
         this.animationSpeed = 5;
+        // this.resources.gameTheme
+        //     .play()
+        //     .then()
+        //     .catch((err) => console.log(err));
 
         for (let i = 0; i < 10; i++) {
             this.platforms.push(new Platform(this));
@@ -45,12 +49,12 @@ export default class Game {
     }
 
     draw(mainContext: CanvasRenderingContext2D) {
-        mainContext.drawImage(this.backgroundImage, 0, this.backgroundPositionY);
-        mainContext.drawImage(this.backgroundImage, 0, this.backgroundPositionY - this.backgroundImage.height);
+        mainContext.drawImage(this.resources.backgroundImage, 0, this.backgroundPositionY);
+        mainContext.drawImage(this.resources.backgroundImage, 0, this.backgroundPositionY - this.resources.backgroundImage.height);
 
         this.backgroundPositionY += 2;
 
-        if (this.backgroundPositionY >= this.backgroundImage.height) {
+        if (this.backgroundPositionY >= this.resources.backgroundImage.height) {
             this.backgroundPositionY = 0;
         }
 
