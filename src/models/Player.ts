@@ -27,9 +27,9 @@ export default class Player {
   constructor(game: Game, playerName: string) {
     this.game = game;
     this.playerName = playerName;
-    this.height = 50;
-    this.width = 50;
-    this.x = 0;
+    this.height = 66;
+    this.width = 28;
+    this.x = 50;
     this.y = game.height - this.height;
     this.speedY = 0;
     this.speedX = 0;
@@ -133,11 +133,14 @@ export default class Player {
       if (this.currentJumpImage >= this.game.resources.jumpImages.length) {
         this.currentJumpImage = 0;
       }
-
+      // context.beginPath();
+      // context.rect(this.x, this.y, this.width, this.height);
+      // context.fillStyle = "yellow";
+      // context.fill();
       context.drawImage(
         this.game.resources.jumpImages[this.currentJumpImage],
-        this.x,
-        this.y - 22,
+        this.x - 18,
+        this.y - 6,
         100,
         80,
       );
@@ -150,21 +153,21 @@ export default class Player {
         this.currentJumpLeftImage++;
       }
 
-      if (this.currentJumpLeftImage >= this.game.resources.jumpLeftImages.length) {
+      if (
+        this.currentJumpLeftImage >= this.game.resources.jumpLeftImages.length
+      ) {
         this.currentJumpLeftImage = 0;
       }
-
       context.drawImage(
-          this.game.resources.jumpLeftImages[this.currentJumpLeftImage],
-          this.x,
-          this.y - 22,
-          100,
-          80,
+        this.game.resources.jumpLeftImages[this.currentJumpLeftImage],
+        this.x - 54,
+        this.y - 6,
+        100,
+        80,
       );
     } else {
       // TODO fine tuning jumping
     }
-
 
     if (!this.isJumping) {
       if (this.isMovingRight) {
@@ -175,11 +178,10 @@ export default class Player {
         if (this.currentRunImage >= this.game.resources.runImages.length) {
           this.currentRunImage = 0;
         }
-
         context.drawImage(
           this.game.resources.runImages[this.currentRunImage],
-          this.x,
-          this.y - 22,
+          this.x - 18,
+          this.y - 6,
           100,
           80,
         );
@@ -189,20 +191,26 @@ export default class Player {
           this.currentRunLeftImage++;
         }
 
-        if (this.currentRunLeftImage >= this.game.resources.runLeftImages.length) {
+        if (
+          this.currentRunLeftImage >= this.game.resources.runLeftImages.length
+        ) {
           this.currentRunLeftImage = 0;
         }
-
         context.drawImage(
           this.game.resources.runLeftImages[this.currentRunLeftImage],
-          this.x,
-          this.y - 22,
+          this.x - 54,
+          this.y - 6,
           100,
           80,
         );
       }
 
-      if (!this.isMovingRight && !this.isMovingLeft && !this.isJumping && this.isRightOrientation) {
+      if (
+        !this.isMovingRight &&
+        !this.isMovingLeft &&
+        !this.isJumping &&
+        this.isRightOrientation
+      ) {
         if (this.game.animationSpeed % 6 === 0) {
           this.currentIdleImage++;
         }
@@ -213,28 +221,36 @@ export default class Player {
 
         context.drawImage(
           this.game.resources.idleImages[this.currentIdleImage],
-          this.x,
-          this.y - 22,
+          this.x - 18,
+          this.y - 6,
           100,
           80,
         );
       }
 
-      if (!this.isMovingRight && !this.isMovingLeft && !this.isJumping && !this.isRightOrientation) {
+      if (
+        !this.isMovingRight &&
+        !this.isMovingLeft &&
+        !this.isJumping &&
+        !this.isRightOrientation
+      ) {
         if (this.game.animationSpeed % 6 === 0) {
           this.currentIdleLeftImage++;
         }
 
-        if (this.currentIdleLeftImage === this.game.resources.idleLeftImages.length) {
+        if (
+          this.currentIdleLeftImage ===
+          this.game.resources.idleLeftImages.length
+        ) {
           this.currentIdleLeftImage = 0;
         }
 
         context.drawImage(
-            this.game.resources.idleLeftImages[this.currentIdleLeftImage],
-            this.x,
-            this.y - 22,
-            100,
-            80,
+          this.game.resources.idleLeftImages[this.currentIdleLeftImage],
+          this.x - 54,
+          this.y - 6,
+          100,
+          80,
         );
       }
     }

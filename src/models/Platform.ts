@@ -9,8 +9,8 @@ export default class Platform {
 
     constructor(game: Game) {
         this.game = game;
-        this.height = 10;
-        this.width = 100;
+        this.height = 40;
+        this.width = 150;
         this.y = this.randomIntFromInterval(800, 500);
         this.x = this.randomIntFromInterval(0, this.game.width);
     }
@@ -21,9 +21,30 @@ export default class Platform {
 
 
     draw(context: CanvasRenderingContext2D) {
-        context.beginPath();
-        context.rect(this.x, this.y, this.width, this.height);
-        context.fillStyle = "yellow";
-        context.fill();
+        // context.beginPath();
+        // context.rect(this.x, this.y, this.width, this.height);
+        // context.fillStyle = "yellow";
+        // context.fill();
+        context.drawImage(
+            this.game.resources.platformImages[0],
+            this.x,
+            this.y,
+            this.width / 3,
+            this.height,
+        );
+        context.drawImage(
+            this.game.resources.platformImages[1],
+            this.x + 50,
+            this.y,
+            this.width / 3,
+            this.height,
+        );
+        context.drawImage(
+            this.game.resources.platformImages[2],
+            this.x + 100,
+            this.y,
+            this.width / 3,
+            this.height,
+        );
     }
 }
