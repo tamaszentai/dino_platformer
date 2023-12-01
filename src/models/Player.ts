@@ -53,7 +53,7 @@ export default class Player {
         this.isMovingRight = true;
       } else if (event.code === "ArrowLeft") {
         this.isMovingLeft = true;
-      } else if (event.code === "Space" && this.jumpCount < 2) {
+      } else if (event.code === "Space" && this.jumpCount < 1) {
         this.isJumping = true;
         this.game.resources.jumpSound
           .play()
@@ -107,9 +107,11 @@ export default class Player {
     }
 
     if (this.isJumping) {
+
+      // TODO platform swoops player up, need to be fixed
       this.speedY += this.game.gravity;
       this.y += this.speedY;
-      if (this.y >= this.floor) {
+      if (this.y + -this.jumpStrength > this.floor) {
         this.y = this.floor;
         this.isJumping = false;
       }
@@ -121,6 +123,8 @@ export default class Player {
       }
     }
 
+    console.log(this.y);
+    console.log(this.y + -this.jumpStrength);
     this.x += this.speedX;
   }
 

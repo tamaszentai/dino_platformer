@@ -27,10 +27,10 @@ export default class Game {
         this.backgroundStartY = 0;
         this.backgroundPositionY = 0;
         this.animationSpeed = 5;
-        this.resources.gameTheme
-            .play()
-            .then()
-            .catch((err) => console.log(err));
+        // this.resources.gameTheme
+        //     .play()
+        //     .then()
+        //     .catch((err) => console.log(err));
 
         for (let i = 0; i < 2; i++) {
             this.platforms.push(new Platform(this));
