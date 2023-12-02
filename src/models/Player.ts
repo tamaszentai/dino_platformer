@@ -23,6 +23,7 @@ export default class Player {
   currentJumpImage: number;
   currentJumpLeftImage: number;
   isRightOrientation: boolean;
+  isPlatformAbove: boolean;
 
   constructor(game: Game, playerName: string) {
     this.game = game;
@@ -47,13 +48,14 @@ export default class Player {
     this.currentJumpImage = 0;
     this.currentJumpLeftImage = 0;
     this.isRightOrientation = true;
+    this.isPlatformAbove = false;
 
     window.addEventListener("keydown", (event) => {
       if (event.code === "ArrowRight") {
         this.isMovingRight = true;
       } else if (event.code === "ArrowLeft") {
         this.isMovingLeft = true;
-      } else if (event.code === "Space" && this.jumpCount < 1) {
+      } else if (event.code === "Space" && this.jumpCount < 2) {
         this.isJumping = true;
         this.game.resources.jumpSound
           .play()
@@ -75,6 +77,7 @@ export default class Player {
 
   update() {
     let lowestFloor = this.game.height - this.height;
+    let currentPlatform;
 
     for (const platform of this.game.platforms) {
       if (
@@ -87,9 +90,22 @@ export default class Player {
           lowestFloor = platformTop;
         }
       }
+
+      if (platform.y < this.y && this.x + this.width >= platform.x &&
+          this.x <= platform.x + platform.width) {
+        currentPlatform = platform;
+        this.isPlatformAbove = true;
+      }
+
+      // TODO detect platform by checking
+      // platform.y + platform.height > this.y + this.height
+      // platform.y >= this.y
+      // check x coords both side
     }
 
     this.floor = lowestFloor;
+
+    console.log(currentPlatform);
 
     if (lowestFloor > this.y && !this.isJumping) {
       this.speedY += 0.1;
@@ -109,9 +125,17 @@ export default class Player {
     if (this.isJumping) {
 
       // TODO platform swoops player up, need to be fixed
+
+      if (currentPlatform && this.y <= currentPlatform.y + currentPlatform.height) {
+        // this.isJumping = false;
+        this.speedY = 0;
+      }
+
+
       this.speedY += this.game.gravity;
       this.y += this.speedY;
-      if (this.y + -this.jumpStrength > this.floor) {
+
+      if (this.y + -this.jumpStrength > this.floor && this.isPlatformAbove) {
         this.y = this.floor;
         this.isJumping = false;
       }
