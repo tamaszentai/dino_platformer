@@ -105,8 +105,6 @@ export default class Player {
 
     this.floor = lowestFloor;
 
-    console.log(currentPlatform);
-
     if (lowestFloor > this.y && !this.isJumping) {
       this.speedY += 0.1;
       this.y += this.speedY;
@@ -146,9 +144,6 @@ export default class Player {
         this.jumpCount = 0;
       }
     }
-
-    console.log(this.y);
-    console.log(this.y + -this.jumpStrength);
     this.x += this.speedX;
   }
 
