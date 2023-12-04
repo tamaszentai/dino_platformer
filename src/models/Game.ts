@@ -63,14 +63,14 @@ export default class Game {
       this.backgroundPositionY - this.resources.backgroundImage.height,
     );
 
-    this.backgroundPositionY += 2;
+    this.backgroundPositionY += 0.5;
 
     if (this.backgroundPositionY >= this.resources.backgroundImage.height) {
       this.backgroundPositionY = 0;
     }
 
     this.platforms.forEach((platform) => {
-      platform.draw(mainContext, platform.y += 2);
+      platform.draw(mainContext, platform.y += 0.5);
     });
     this.player.draw(mainContext);
   }

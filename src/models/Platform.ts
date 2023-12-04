@@ -21,10 +21,10 @@ export default class Platform {
 
 
     draw(context: CanvasRenderingContext2D, movingY: number) {
-        // context.beginPath();
-        // context.rect(this.x, this.y, this.width, this.height);
-        // context.fillStyle = "yellow";
-        // context.fill();
+        context.beginPath();
+        context.rect(this.x, this.y, this.width, this.height);
+        context.fillStyle = "red";
+        context.fill();
         context.drawImage(
             this.game.resources.platformImages[0],
             this.x,

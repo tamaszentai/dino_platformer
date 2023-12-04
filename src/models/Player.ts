@@ -7,6 +7,7 @@ export default class Player {
   width: number;
   x: number;
   y: number;
+  playerFeet: number;
   speedY: number;
   speedX: number;
   isMovingLeft: boolean;
@@ -32,6 +33,7 @@ export default class Player {
     this.width = 28;
     this.x = 50;
     this.y = game.height - this.height;
+    this.playerFeet = this.y + this.height;
     this.speedY = 0;
     this.speedX = 0;
     this.isMovingLeft = false;
@@ -77,7 +79,7 @@ export default class Player {
 
   update() {
     let lowestFloor = this.game.height - this.height;
-    let currentPlatform;
+    let platformTop;
 
     for (const platform of this.game.platforms) {
       if (
@@ -85,27 +87,17 @@ export default class Player {
         this.x + this.width >= platform.x &&
         this.x <= platform.x + platform.width
       ) {
-        const platformTop = platform.y - this.height;
+        platformTop = platform.y - this.height;
         if (platformTop < lowestFloor) {
           lowestFloor = platformTop;
         }
       }
-
-      if (platform.y < this.y && this.x + this.width >= platform.x &&
-          this.x <= platform.x + platform.width) {
-        currentPlatform = platform;
-        this.isPlatformAbove = true;
-      }
-
-      // TODO detect platform by checking
-      // platform.y + platform.height > this.y + this.height
-      // platform.y >= this.y
-      // check x coords both side
     }
 
     this.floor = lowestFloor;
 
     if (lowestFloor > this.y && !this.isJumping) {
+      // walking off from platforms
       this.speedY += 0.1;
       this.y += this.speedY;
     }
@@ -121,29 +113,17 @@ export default class Player {
     }
 
     if (this.isJumping) {
-
       // TODO platform swoops player up, need to be fixed
-
-      if (currentPlatform && this.y <= currentPlatform.y + currentPlatform.height) {
-        // this.isJumping = false;
-        this.speedY = 0;
-      }
-
-
       this.speedY += this.game.gravity;
       this.y += this.speedY;
-
-      if (this.y + -this.jumpStrength > this.floor && this.isPlatformAbove) {
-        this.y = this.floor;
-        this.isJumping = false;
-      }
-    } else {
-      this.y += this.game.gravity;
-      if (this.y >= this.floor) {
+      if (this.y > this.floor) {
         this.y = this.floor;
         this.jumpCount = 0;
+        this.isJumping = false;
+        this.speedY = this.game.backgroundPositionY;
       }
     }
+
     this.x += this.speedX;
   }
 
@@ -156,10 +136,10 @@ export default class Player {
       if (this.currentJumpImage >= this.game.resources.jumpImages.length) {
         this.currentJumpImage = 0;
       }
-      // context.beginPath();
-      // context.rect(this.x, this.y, this.width, this.height);
-      // context.fillStyle = "yellow";
-      // context.fill();
+      context.beginPath();
+      context.rect(this.x, this.y, this.width, this.height);
+      context.fillStyle = "yellow";
+      context.fill();
       context.drawImage(
         this.game.resources.jumpImages[this.currentJumpImage],
         this.x - 18,
@@ -181,6 +161,12 @@ export default class Player {
       ) {
         this.currentJumpLeftImage = 0;
       }
+
+      context.beginPath();
+      context.rect(this.x, this.y, this.width, this.height);
+      context.fillStyle = "yellow";
+      context.fill();
+
       context.drawImage(
         this.game.resources.jumpLeftImages[this.currentJumpLeftImage],
         this.x - 54,
@@ -201,6 +187,12 @@ export default class Player {
         if (this.currentRunImage >= this.game.resources.runImages.length) {
           this.currentRunImage = 0;
         }
+
+        context.beginPath();
+        context.rect(this.x, this.y, this.width, this.height);
+        context.fillStyle = "yellow";
+        context.fill();
+
         context.drawImage(
           this.game.resources.runImages[this.currentRunImage],
           this.x - 18,
@@ -219,6 +211,12 @@ export default class Player {
         ) {
           this.currentRunLeftImage = 0;
         }
+
+        context.beginPath();
+        context.rect(this.x, this.y, this.width, this.height);
+        context.fillStyle = "yellow";
+        context.fill();
+
         context.drawImage(
           this.game.resources.runLeftImages[this.currentRunLeftImage],
           this.x - 54,
@@ -241,6 +239,10 @@ export default class Player {
         if (this.currentIdleImage === this.game.resources.idleImages.length) {
           this.currentIdleImage = 0;
         }
+        context.beginPath();
+        context.rect(this.x, this.y, this.width, this.height);
+        context.fillStyle = "yellow";
+        context.fill();
 
         context.drawImage(
           this.game.resources.idleImages[this.currentIdleImage],
@@ -268,6 +270,10 @@ export default class Player {
           this.currentIdleLeftImage = 0;
         }
 
+        context.beginPath();
+        context.rect(this.x, this.y, this.width, this.height);
+        context.fillStyle = "yellow";
+        context.fill();
         context.drawImage(
           this.game.resources.idleLeftImages[this.currentIdleLeftImage],
           this.x - 54,
