@@ -23,15 +23,6 @@ export default class Game {
     this.platformCount = 300;
     this.resources = new Resources();
     this.platforms = [];
-    this.player = new Player(this, playerName);
-    this.inputHandler = new InputHandler(this);
-    this.backgroundStartY = 0;
-    this.backgroundPositionY = 0;
-    this.animationSpeed = 5;
-    // this.resources.gameTheme
-    //     .play()
-    //     .then()
-    //     .catch((err) => console.log(err));
 
     for (let i = 0; i < this.platformCount; i++) {
       let platform = new Platform(this);
@@ -45,6 +36,18 @@ export default class Game {
       }
       this.platforms.push(platform);
     }
+
+    this.player = new Player(this, playerName);
+    this.inputHandler = new InputHandler(this);
+    this.backgroundStartY = 0;
+    this.backgroundPositionY = 0;
+    this.animationSpeed = 5;
+    // this.resources.gameTheme
+    //     .play()
+    //     .then()
+    //     .catch((err) => console.log(err));
+
+
   }
 
   update() {

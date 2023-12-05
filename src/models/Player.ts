@@ -31,8 +31,8 @@ export default class Player {
     this.playerName = playerName;
     this.height = 66;
     this.width = 28;
-    this.x = 50;
-    this.y = game.height - this.height;
+    this.x = game.platforms[0].x + game.platforms[0].width / 2;
+    this.y = game.platforms[0].y - this.height;
     this.playerFeet = this.y + this.height;
     this.speedY = 0;
     this.speedX = 0;
@@ -113,11 +113,13 @@ export default class Player {
       if (this.y > this.floor) {
         this.y = this.floor;
         if (this.y === this.floor) {
-          this.speedY = 0
+          this.speedY = 0;
           this.isJumping = false;
         }
         this.jumpCount = 0;
       }
+    } else {
+      this.y += this.game.gravity;
     }
 
     this.x += this.speedX;
