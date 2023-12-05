@@ -83,7 +83,7 @@ export default class Player {
 
     for (const platform of this.game.platforms) {
       if (
-        this.y + this.height < platform.y + platform.height &&
+        this.y + this.height < platform.y &&
         this.x + this.width >= platform.x &&
         this.x <= platform.x + platform.width
       ) {
@@ -96,11 +96,6 @@ export default class Player {
 
     this.floor = lowestFloor;
 
-    if (lowestFloor > this.y && !this.isJumping) {
-      // walking off from platforms
-      this.speedY += 0.1;
-      this.y += this.speedY;
-    }
 
     if (this.isMovingRight) {
       this.isRightOrientation = true;
@@ -113,11 +108,14 @@ export default class Player {
     }
 
     if (this.isJumping) {
-      // TODO platform swoops player up, need to be fixed
       this.speedY += this.game.gravity;
       this.y += this.speedY;
       if (this.y > this.floor) {
         this.y = this.floor;
+        if (this.y === this.floor) {
+          this.speedY = 0
+          this.isJumping = false;
+        }
         this.jumpCount = 0;
       }
     }
