@@ -12,7 +12,7 @@ export default class Platform {
         this.height = 40;
         this.width = 150;
         this.y = 500
-        this.x = this.randomIntFromInterval(0, this.game.width);
+        this.x = this.randomIntFromInterval(this.width, this.game.width - this.width);
     }
 
     randomIntFromInterval(min: number, max:number) {

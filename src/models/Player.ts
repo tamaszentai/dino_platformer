@@ -114,7 +114,7 @@ export default class Player {
         this.y = this.floor;
         if (this.y === this.floor) {
           this.speedY = 0;
-          this.isJumping = false;
+          // this.isJumping = false;
         }
         this.jumpCount = 0;
       }
