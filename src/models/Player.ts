@@ -119,8 +119,6 @@ export default class Player {
       if (this.y > this.floor) {
         this.y = this.floor;
         this.jumpCount = 0;
-        this.isJumping = false;
-        this.speedY = this.game.backgroundPositionY;
       }
     }
 
