@@ -7,7 +7,6 @@ export default class Player {
   width: number;
   x: number;
   y: number;
-  playerFeet: number;
   speedY: number;
   speedX: number;
   isMovingLeft: boolean;
@@ -24,7 +23,7 @@ export default class Player {
   currentJumpImage: number;
   currentJumpLeftImage: number;
   isRightOrientation: boolean;
-  isPlatformAbove: boolean;
+  isDead: boolean;
 
   constructor(game: Game, playerName: string) {
     this.game = game;
@@ -33,7 +32,6 @@ export default class Player {
     this.width = 28;
     this.x = game.platforms[0].x + game.platforms[0].width / 2;
     this.y = game.platforms[0].y - this.height;
-    this.playerFeet = this.y + this.height;
     this.speedY = 0;
     this.speedX = 0;
     this.isMovingLeft = false;
@@ -50,15 +48,18 @@ export default class Player {
     this.currentJumpImage = 0;
     this.currentJumpLeftImage = 0;
     this.isRightOrientation = true;
-    this.isPlatformAbove = false;
+    this.isDead = false;
 
     window.addEventListener("keydown", (event) => {
-      if (event.code === "ArrowRight") {
+      if (event.code === "ArrowRight" && !this.isDead) {
         this.isMovingRight = true;
-      } else if (event.code === "ArrowLeft") {
+        this.game.isGameStarted = true;
+      } else if (event.code === "ArrowLeft" && !this.isDead) {
         this.isMovingLeft = true;
-      } else if (event.code === "Space" && this.jumpCount < 2) {
+        this.game.isGameStarted = true;
+      } else if (event.code === "Space" && !this.isDead && this.jumpCount < 2) {
         this.isJumping = true;
+        this.game.isGameStarted = true;
         this.game.resources.jumpSound
           .play()
           .then()
@@ -78,8 +79,22 @@ export default class Player {
   }
 
   update() {
+
+    // dead case start
+    if (this.game.height <= this.y + this.height) {
+      this.isDead = true;
+      this.isJumping = false;
+      this.isMovingLeft = false;
+      this.isMovingRight = false;
+      this.game.isGameStarted = false;
+      this.game.gameSpeed = 0;
+    }
+    // dead case end
+
+
     let lowestFloor = this.game.height - this.height;
     let platformTop;
+
 
     for (const platform of this.game.platforms) {
       if (
@@ -95,7 +110,6 @@ export default class Player {
     }
 
     this.floor = lowestFloor;
-
 
     if (this.isMovingRight) {
       this.isRightOrientation = true;
@@ -114,12 +128,12 @@ export default class Player {
         this.y = this.floor;
         if (this.y === this.floor) {
           this.speedY = 0;
-          // this.isJumping = false;
+          this.isJumping = false;
         }
         this.jumpCount = 0;
       }
     } else {
-      this.y += this.game.gravity;
+      this.y += this.game.gameSpeed;
     }
 
     this.x += this.speedX;

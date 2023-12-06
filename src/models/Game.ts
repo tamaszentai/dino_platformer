@@ -15,6 +15,8 @@ export default class Game {
   backgroundStartY: number;
   backgroundPositionY: number;
   animationSpeed: number;
+  gameSpeed: number;
+  isGameStarted: boolean;
 
   constructor(width: number, height: number, playerName: string) {
     this.width = width;
@@ -23,6 +25,8 @@ export default class Game {
     this.platformCount = 300;
     this.resources = new Resources();
     this.platforms = [];
+    this.gameSpeed = 0;
+    this.isGameStarted = false;
 
     for (let i = 0; i < this.platformCount; i++) {
       let platform = new Platform(this);
@@ -52,6 +56,9 @@ export default class Game {
 
   update() {
     this.player.update();
+    if (this.isGameStarted) {
+      this.gameSpeed = 5;
+    }
   }
 
   draw(mainContext: CanvasRenderingContext2D) {
@@ -66,14 +73,14 @@ export default class Game {
       this.backgroundPositionY - this.resources.backgroundImage.height,
     );
 
-    this.backgroundPositionY += 0.5;
+    this.backgroundPositionY += this.gameSpeed;
 
     if (this.backgroundPositionY >= this.resources.backgroundImage.height) {
       this.backgroundPositionY = 0;
     }
 
     this.platforms.forEach((platform) => {
-      platform.draw(mainContext, platform.y += 0.5);
+      platform.draw(mainContext, platform.y += this.gameSpeed);
     });
     this.player.draw(mainContext);
   }
