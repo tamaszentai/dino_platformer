@@ -16,12 +16,15 @@ export default class Player {
   jumpCount: number;
   maxJumps: number;
   floor: number;
+  onPlatform: boolean;
   currentIdleImage: number;
   currentIdleLeftImage: number;
   currentRunImage: number;
   currentRunLeftImage: number;
   currentJumpImage: number;
   currentJumpLeftImage: number;
+  currentDeadImage: number;
+  currentDeadLeftImage: number;
   isRightOrientation: boolean;
   isDead: boolean;
 
@@ -41,12 +44,15 @@ export default class Player {
     this.jumpCount = 0;
     this.maxJumps = 2;
     this.floor = game.height - this.height;
+    this.onPlatform = true;
     this.currentIdleImage = 0;
     this.currentIdleLeftImage = 0;
     this.currentRunImage = 0;
     this.currentRunLeftImage = 0;
     this.currentJumpImage = 0;
     this.currentJumpLeftImage = 0;
+    this.currentDeadImage = 0;
+    this.currentDeadLeftImage = 0;
     this.isRightOrientation = true;
     this.isDead = false;
 
@@ -59,6 +65,7 @@ export default class Player {
         this.game.isGameStarted = true;
       } else if (event.code === "Space" && !this.isDead && this.jumpCount < 2) {
         this.isJumping = true;
+        this.onPlatform = false;
         this.game.isGameStarted = true;
         this.game.resources.jumpSound
           .play()
@@ -79,7 +86,6 @@ export default class Player {
   }
 
   update() {
-
     // dead case start
     if (this.game.height <= this.y + this.height) {
       this.isDead = true;
@@ -91,10 +97,8 @@ export default class Player {
     }
     // dead case end
 
-
     let lowestFloor = this.game.height - this.height;
     let platformTop;
-
 
     for (const platform of this.game.platforms) {
       if (
@@ -121,26 +125,75 @@ export default class Player {
       this.speedX = 0;
     }
 
-    if (this.isJumping) {
+    if (this.game.isGameStarted || this.isJumping) {
       this.speedY += this.game.gravity;
       this.y += this.speedY;
       if (this.y > this.floor) {
         this.y = this.floor;
         if (this.y === this.floor) {
-          this.speedY = 0;
-          this.isJumping = false;
+          this.speedY = this.game.gameSpeed;
+          this.onPlatform = true;
+          // this.isJumping = false;
         }
         this.jumpCount = 0;
       }
-    } else {
-      this.y += this.game.gameSpeed;
     }
+    // else {
+    //   this.y += this.game.gameSpeed;
+    // }
 
     this.x += this.speedX;
   }
 
   draw(context: CanvasRenderingContext2D) {
-    if (this.isJumping && this.isRightOrientation) {
+    if (this.isDead) {
+      if (this.isRightOrientation) {
+        if (this.game.animationSpeed % 8 === 0 && this.currentDeadImage < 7) {
+          this.currentDeadImage++;
+        }
+
+        // context.beginPath();
+        // context.rect(this.x, this.y, this.width, this.height);
+        // context.fillStyle = "yellow";
+        // context.fill();
+
+        context.drawImage(
+          this.game.resources.deadImages[this.currentDeadImage],
+          this.x - 18,
+          this.y - 6,
+          100,
+          80,
+        );
+      }
+
+      if (!this.isRightOrientation) {
+        if (this.game.animationSpeed % 8 === 0 && this.currentDeadLeftImage < 7) {
+          this.currentDeadLeftImage++;
+        }
+
+        if (
+          this.currentDeadLeftImage ===
+          this.game.resources.deadLeftImages.length
+        ) {
+          this.currentDeadLeftImage = 0;
+        }
+
+        // context.beginPath();
+        // context.rect(this.x, this.y, this.width, this.height);
+        // context.fillStyle = "yellow";
+        // context.fill();
+
+        context.drawImage(
+          this.game.resources.deadLeftImages[this.currentDeadLeftImage],
+          this.x - 54,
+          this.y - 6,
+          100,
+          80,
+        );
+      }
+    }
+
+    if (this.isJumping && this.isRightOrientation && !this.onPlatform) {
       if (this.game.animationSpeed % 8 === 0) {
         this.currentJumpImage++;
       }
@@ -148,10 +201,11 @@ export default class Player {
       if (this.currentJumpImage >= this.game.resources.jumpImages.length) {
         this.currentJumpImage = 0;
       }
-      context.beginPath();
-      context.rect(this.x, this.y, this.width, this.height);
-      context.fillStyle = "yellow";
-      context.fill();
+      // context.beginPath();
+      // context.rect(this.x, this.y, this.width, this.height);
+      // context.fillStyle = "yellow";
+      // context.fill();
+
       context.drawImage(
         this.game.resources.jumpImages[this.currentJumpImage],
         this.x - 18,
@@ -163,7 +217,7 @@ export default class Player {
       // TODO fine tuning jumping
     }
 
-    if (this.isJumping && !this.isRightOrientation) {
+    if (this.isJumping && !this.isRightOrientation && !this.onPlatform) {
       if (this.game.animationSpeed % 8 === 0) {
         this.currentJumpLeftImage++;
       }
@@ -174,10 +228,10 @@ export default class Player {
         this.currentJumpLeftImage = 0;
       }
 
-      context.beginPath();
-      context.rect(this.x, this.y, this.width, this.height);
-      context.fillStyle = "yellow";
-      context.fill();
+      // context.beginPath();
+      // context.rect(this.x, this.y, this.width, this.height);
+      // context.fillStyle = "yellow";
+      // context.fill();
 
       context.drawImage(
         this.game.resources.jumpLeftImages[this.currentJumpLeftImage],
@@ -189,8 +243,7 @@ export default class Player {
     } else {
       // TODO fine tuning jumping
     }
-
-    if (!this.isJumping) {
+    if (this.onPlatform) {
       if (this.isMovingRight) {
         if (this.game.animationSpeed % 8 === 0) {
           this.currentRunImage++;
@@ -200,10 +253,10 @@ export default class Player {
           this.currentRunImage = 0;
         }
 
-        context.beginPath();
-        context.rect(this.x, this.y, this.width, this.height);
-        context.fillStyle = "yellow";
-        context.fill();
+        // context.beginPath();
+        // context.rect(this.x, this.y, this.width, this.height);
+        // context.fillStyle = "yellow";
+        // context.fill();
 
         context.drawImage(
           this.game.resources.runImages[this.currentRunImage],
@@ -223,11 +276,10 @@ export default class Player {
         ) {
           this.currentRunLeftImage = 0;
         }
-
-        context.beginPath();
-        context.rect(this.x, this.y, this.width, this.height);
-        context.fillStyle = "yellow";
-        context.fill();
+        // context.beginPath();
+        // context.rect(this.x, this.y, this.width, this.height);
+        // context.fillStyle = "yellow";
+        // context.fill();
 
         context.drawImage(
           this.game.resources.runLeftImages[this.currentRunLeftImage],
@@ -241,8 +293,9 @@ export default class Player {
       if (
         !this.isMovingRight &&
         !this.isMovingLeft &&
-        !this.isJumping &&
-        this.isRightOrientation
+        this.onPlatform &&
+        this.isRightOrientation &&
+        !this.isDead
       ) {
         if (this.game.animationSpeed % 6 === 0) {
           this.currentIdleImage++;
@@ -251,10 +304,11 @@ export default class Player {
         if (this.currentIdleImage === this.game.resources.idleImages.length) {
           this.currentIdleImage = 0;
         }
-        context.beginPath();
-        context.rect(this.x, this.y, this.width, this.height);
-        context.fillStyle = "yellow";
-        context.fill();
+
+        // context.beginPath();
+        // context.rect(this.x, this.y, this.width, this.height);
+        // context.fillStyle = "yellow";
+        // context.fill();
 
         context.drawImage(
           this.game.resources.idleImages[this.currentIdleImage],
@@ -268,8 +322,9 @@ export default class Player {
       if (
         !this.isMovingRight &&
         !this.isMovingLeft &&
-        !this.isJumping &&
-        !this.isRightOrientation
+        this.onPlatform &&
+        !this.isRightOrientation &&
+        !this.isDead
       ) {
         if (this.game.animationSpeed % 6 === 0) {
           this.currentIdleLeftImage++;
@@ -282,10 +337,11 @@ export default class Player {
           this.currentIdleLeftImage = 0;
         }
 
-        context.beginPath();
-        context.rect(this.x, this.y, this.width, this.height);
-        context.fillStyle = "yellow";
-        context.fill();
+        // context.beginPath();
+        // context.rect(this.x, this.y, this.width, this.height);
+        // context.fillStyle = "yellow";
+        // context.fill();
+
         context.drawImage(
           this.game.resources.idleLeftImages[this.currentIdleLeftImage],
           this.x - 54,

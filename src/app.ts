@@ -10,6 +10,8 @@ const animate = () => {
   game.update();
   game.animationSpeed++;
   game.draw(mainCtx);
-  requestAnimationFrame(animate);
+  // if (game.player.currentDeadImage !== 7 || game.player.currentDeadLeftImage !== 7) {
+    requestAnimationFrame(animate);
+  // }
 };
 animate();

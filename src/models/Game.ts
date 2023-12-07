@@ -55,10 +55,10 @@ export default class Game {
   }
 
   update() {
-    this.player.update();
     if (this.isGameStarted) {
       this.gameSpeed = 5;
     }
+    this.player.update();
   }
 
   draw(mainContext: CanvasRenderingContext2D) {

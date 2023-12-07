@@ -9,6 +9,8 @@ export default class Resources {
     runLeftImages: HTMLImageElement[];
     jumpImages: HTMLImageElement[];
     jumpLeftImages: HTMLImageElement[];
+    deadImages: HTMLImageElement[];
+    deadLeftImages: HTMLImageElement[];
 
     constructor() {
         this.backgroundImage = this.loadImage('src/assets/images/clouds.jpg');
@@ -24,6 +26,8 @@ export default class Resources {
         this.runLeftImages = this.preloadImages('runLeft', 8);
         this.jumpImages = this.preloadImages('jump', 12);
         this.jumpLeftImages = this.preloadImages('jumpLeft', 12);
+        this.deadImages = this.preloadImages('dead', 8);
+        this.deadLeftImages = this.preloadImages('deadLeft', 8);
     }
 
     loadImage(src: string) {
