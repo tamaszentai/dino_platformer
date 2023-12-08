@@ -18,7 +18,7 @@ export default class Game {
   gameSpeed: number;
   isGameStarted: boolean;
 
-  constructor(width: number, height: number, playerName: string) {
+  constructor(width: number, height: number) {
     this.width = width;
     this.height = height;
     this.gravity = 0.5;
@@ -41,7 +41,7 @@ export default class Game {
       this.platforms.push(platform);
     }
 
-    this.player = new Player(this, playerName);
+    this.player = new Player(this);
     this.inputHandler = new InputHandler(this);
     this.backgroundStartY = 0;
     this.backgroundPositionY = 0;
@@ -56,9 +56,10 @@ export default class Game {
 
   update() {
     if (this.isGameStarted) {
-      this.gameSpeed = 5;
+      this.gameSpeed = 2;
     }
     this.player.update();
+    console.log(this.gameSpeed);
   }
 
   draw(mainContext: CanvasRenderingContext2D) {

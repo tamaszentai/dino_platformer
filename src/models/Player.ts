@@ -2,7 +2,6 @@ import Game from "./Game.js";
 
 export default class Player {
   game: Game;
-  playerName: string;
   height: number;
   width: number;
   x: number;
@@ -28,9 +27,8 @@ export default class Player {
   isRightOrientation: boolean;
   isDead: boolean;
 
-  constructor(game: Game, playerName: string) {
+  constructor(game: Game) {
     this.game = game;
-    this.playerName = playerName;
     this.height = 66;
     this.width = 28;
     this.x = game.platforms[0].x + game.platforms[0].width / 2;
@@ -167,7 +165,10 @@ export default class Player {
       }
 
       if (!this.isRightOrientation) {
-        if (this.game.animationSpeed % 8 === 0 && this.currentDeadLeftImage < 7) {
+        if (
+          this.game.animationSpeed % 8 === 0 &&
+          this.currentDeadLeftImage < 7
+        ) {
           this.currentDeadLeftImage++;
         }
 
@@ -258,13 +259,23 @@ export default class Player {
         // context.fillStyle = "yellow";
         // context.fill();
 
-        context.drawImage(
-          this.game.resources.runImages[this.currentRunImage],
-          this.x - 18,
-          this.y - 6,
-          100,
-          80,
-        );
+        if (this.game.isGameStarted) {
+          context.drawImage(
+            this.game.resources.runImages[this.currentRunImage],
+            this.x - 18,
+            this.y - 6 + this.game.gameSpeed,
+            100,
+            80,
+          );
+        } else {
+          context.drawImage(
+            this.game.resources.runImages[this.currentRunImage],
+            this.x - 18,
+            this.y - 6,
+            100,
+            80,
+          );
+        }
       }
       if (this.isMovingLeft) {
         if (this.game.animationSpeed % 8 === 0) {
@@ -281,13 +292,22 @@ export default class Player {
         // context.fillStyle = "yellow";
         // context.fill();
 
-        context.drawImage(
-          this.game.resources.runLeftImages[this.currentRunLeftImage],
-          this.x - 54,
-          this.y - 6,
-          100,
-          80,
-        );
+        if (this.game.isGameStarted) {
+          context.drawImage(
+            this.game.resources.runLeftImages[this.currentRunLeftImage],
+            this.x - 54,
+            this.y - 6 + this.game.gameSpeed,
+            100,
+            80,
+          );
+        } else
+          context.drawImage(
+            this.game.resources.runLeftImages[this.currentRunLeftImage],
+            this.x - 54,
+            this.y - 6,
+            100,
+            80,
+          );
       }
 
       if (
@@ -310,13 +330,23 @@ export default class Player {
         // context.fillStyle = "yellow";
         // context.fill();
 
-        context.drawImage(
-          this.game.resources.idleImages[this.currentIdleImage],
-          this.x - 18,
-          this.y - 6,
-          100,
-          80,
-        );
+        if (this.game.isGameStarted) {
+          context.drawImage(
+            this.game.resources.idleImages[this.currentIdleImage],
+            this.x - 18,
+            this.y - 6 + this.game.gameSpeed,
+            100,
+            80,
+          );
+        } else {
+          context.drawImage(
+            this.game.resources.idleImages[this.currentIdleImage],
+            this.x - 18,
+            this.y - 6,
+            100,
+            80,
+          );
+        }
       }
 
       if (
@@ -342,13 +372,23 @@ export default class Player {
         // context.fillStyle = "yellow";
         // context.fill();
 
-        context.drawImage(
-          this.game.resources.idleLeftImages[this.currentIdleLeftImage],
-          this.x - 54,
-          this.y - 6,
-          100,
-          80,
-        );
+        if (this.game.isGameStarted) {
+          context.drawImage(
+            this.game.resources.idleLeftImages[this.currentIdleLeftImage],
+            this.x - 54,
+            this.y - 6 + this.game.gameSpeed,
+            100,
+            80,
+          );
+        } else {
+          context.drawImage(
+            this.game.resources.idleLeftImages[this.currentIdleLeftImage],
+            this.x - 54,
+            this.y - 6,
+            100,
+            80,
+          );
+        }
       }
     }
   }
