@@ -57,14 +57,20 @@ export default class Player {
     window.addEventListener("keydown", (event) => {
       if (event.code === "ArrowRight" && !this.isDead) {
         this.isMovingRight = true;
-        this.game.isGameStarted = true;
+        if (!this.game.isGameStarted) {
+            this.game.play();
+        }
       } else if (event.code === "ArrowLeft" && !this.isDead) {
         this.isMovingLeft = true;
-        this.game.isGameStarted = true;
+        if (!this.game.isGameStarted) {
+          this.game.play();
+        }
       } else if (event.code === "Space" && !this.isDead && this.jumpCount < 2) {
         this.isJumping = true;
         this.onPlatform = false;
-        this.game.isGameStarted = true;
+        if (!this.game.isGameStarted) {
+          this.game.play();
+        }
         this.game.resources.jumpSound
           .play()
           .then()
