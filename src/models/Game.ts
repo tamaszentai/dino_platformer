@@ -18,6 +18,7 @@ export default class Game {
   gameSpeed: number;
   score: number;
   isGameStarted: boolean;
+  gameOverThemeCount: number;
 
   constructor(width: number, height: number) {
     this.width = width;
@@ -29,6 +30,7 @@ export default class Game {
     this.gameSpeed = 0;
     this.score = 0;
     this.isGameStarted = false;
+    this.gameOverThemeCount = 0;
 
     for (let i = 0; i < this.platformCount; i++) {
       let platform = new Platform(this);
@@ -59,13 +61,30 @@ export default class Game {
     this.gameSpeed = 1;
   }
 
+  gameOver() {
+    this.isGameStarted = false;
+    this.resources.gameTheme.pause();
+    this.gameSpeed = 0;
+    if (this.gameOverThemeCount === 0) {
+      this.resources.gameOverTheme
+        .play()
+        .then()
+        .catch((err) => console.log(err));
+      this.gameOverThemeCount++;
+    }
+  }
+
   update() {
+    if (this.player.isDead) {
+      this.gameOver();
+    }
+
     if (this.isGameStarted) {
       this.score++;
     }
 
     if (this.score % 1000 === 0 && this.score !== 0) {
-        this.gameSpeed++;
+        this.gameSpeed += 0.5;
     }
     this.animationSpeed++;
     this.player.update();

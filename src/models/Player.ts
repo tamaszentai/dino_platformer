@@ -96,8 +96,6 @@ export default class Player {
       this.isJumping = false;
       this.isMovingLeft = false;
       this.isMovingRight = false;
-      this.game.isGameStarted = false;
-      this.game.gameSpeed = 0;
     }
     // dead case end
 

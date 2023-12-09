@@ -17,11 +17,9 @@ const animate = () => {
   mainCtx.fillText("Hello World", 10, 50);
   game.update();
   game.draw(mainCtx);
-
-
   mainCtx.font = "30px Arial";
   mainCtx.fillText(`Score: ${game.score}`, 10, 50);
-  mainCtx.fillText(`Speed: ${game.gameSpeed}`, 890, 50);
-    requestAnimationFrame(animate);
+  mainCtx.fillText(`Speed: ${game.gameSpeed}`, 870, 50);
+  requestAnimationFrame(animate);
 };
 animate();
