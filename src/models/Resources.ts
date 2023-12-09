@@ -1,5 +1,6 @@
 export default class Resources {
     backgroundImage: HTMLImageElement;
+    trophyImage: HTMLImageElement;
     gameTheme: HTMLAudioElement;
     jumpSound: HTMLAudioElement;
     gameOverTheme: HTMLAudioElement;
@@ -15,6 +16,7 @@ export default class Resources {
 
     constructor() {
         this.backgroundImage = this.loadImage('src/assets/images/clouds.jpg');
+        this.trophyImage = this.loadImage('src/assets/images/trophy.png');
         this.gameTheme = this.loadAudio('src/assets/sounds/game_theme.mp3');
         this.gameTheme.loop = true;
         this.gameTheme.volume = 0.2;

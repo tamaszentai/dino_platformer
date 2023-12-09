@@ -1,7 +1,7 @@
 import Resources from "./Resources.js";
 import Player from "./Player.js";
-import InputHandler from "./InputHandler.js";
 import Platform from "./Platform.js";
+import Thing from "./Thing.js";
 
 export default class Game {
   width: number;
@@ -11,7 +11,7 @@ export default class Game {
   resources: Resources;
   platforms: Platform[];
   player: Player;
-  inputHandler: InputHandler;
+  trophy: Thing;
   backgroundStartY: number;
   backgroundPositionY: number;
   animationSpeed: number;
@@ -24,7 +24,7 @@ export default class Game {
     this.width = width;
     this.height = height;
     this.gravity = 0.5;
-    this.platformCount = 300;
+    this.platformCount = 4;
     this.resources = new Resources();
     this.platforms = [];
     this.gameSpeed = 0;
@@ -46,7 +46,14 @@ export default class Game {
     }
 
     this.player = new Player(this);
-    this.inputHandler = new InputHandler(this);
+    this.trophy = new Thing(
+      this,
+      this.platforms[this.platforms.length - 1].x +
+        this.platforms[this.platforms.length - 1].width / 2 -
+        20,
+      this.platforms[this.platforms.length - 1].y - 50,
+      this.resources.trophyImage,
+    );
     this.backgroundStartY = 0;
     this.backgroundPositionY = 0;
     this.animationSpeed = 5;
@@ -84,19 +91,19 @@ export default class Game {
     }
 
     if (this.score % 1000 === 0 && this.score !== 0) {
-        this.gameSpeed += 0.5;
+      this.gameSpeed += 0.5;
     }
     this.animationSpeed++;
     this.player.update();
   }
 
-  draw(mainContext: CanvasRenderingContext2D) {
-    mainContext.drawImage(
+  draw(context: CanvasRenderingContext2D) {
+    context.drawImage(
       this.resources.backgroundImage,
       0,
       this.backgroundPositionY,
     );
-    mainContext.drawImage(
+    context.drawImage(
       this.resources.backgroundImage,
       0,
       this.backgroundPositionY - this.resources.backgroundImage.height,
@@ -109,8 +116,10 @@ export default class Game {
     }
 
     this.platforms.forEach((platform) => {
-      platform.draw(mainContext, (platform.y += this.gameSpeed));
+      platform.draw(context, (platform.y += this.gameSpeed));
     });
-    this.player.draw(mainContext);
+
+    this.trophy.draw(context, (this.trophy.y += this.gameSpeed));
+    this.player.draw(context);
   }
 }

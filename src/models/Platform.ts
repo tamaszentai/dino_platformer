@@ -25,6 +25,7 @@ export default class Platform {
         // context.rect(this.x, this.y, this.width, this.height);
         // context.fillStyle = "red";
         // context.fill();
+
         context.drawImage(
             this.game.resources.platformImages[0],
             this.x,
