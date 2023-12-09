@@ -55,26 +55,23 @@ export default class Player {
     this.isDead = false;
 
     window.addEventListener("keydown", (event) => {
-      if (event.code === "ArrowRight" && !this.isDead) {
+      if (event.code === "ArrowRight" && !this.isDead && !this.game.isGameWon) {
         this.isMovingRight = true;
-        if (!this.game.isGameStarted) {
-            this.game.play();
-        }
-      } else if (event.code === "ArrowLeft" && !this.isDead) {
-        this.isMovingLeft = true;
-        if (!this.game.isGameStarted) {
+        if (!this.game.isGameStarted && !this.game.isGameWon) {
           this.game.play();
         }
-      } else if (event.code === "Space" && !this.isDead && this.jumpCount < 2) {
+      } else if (event.code === "ArrowLeft" && !this.isDead && !this.game.isGameWon) {
+        this.isMovingLeft = true;
+        if (!this.game.isGameStarted && !this.game.isGameWon) {
+          this.game.play();
+        }
+      } else if (event.code === "Space" && !this.isDead && this.jumpCount < 2 && !this.game.isGameWon) {
         this.isJumping = true;
         this.onPlatform = false;
-        if (!this.game.isGameStarted) {
+        if (!this.game.isGameStarted && !this.game.isGameWon && !this.game.isGameWon) {
           this.game.play();
         }
-        this.game.resources.jumpSound
-          .play()
-          .then()
-          .catch((err: Error) => console.log(err));
+        this.game.resources.jumpSound.play().then(() => this.game.resources.jumpSound.currentTime=0).catch();
         this.jumpCount++;
         this.speedY = -this.jumpStrength;
       }
@@ -90,6 +87,15 @@ export default class Player {
   }
 
   update() {
+    if (
+      this.y < this.game.trophy.y + this.game.trophy.height &&
+      this.y > this.game.trophy.y - this.height &&
+      this.x + this.width >= this.game.trophy.x&&
+      this.x <= this.game.trophy.x + this.width
+    ) {
+      this.game.gameWon();
+    }
+
     // dead case start
     if (this.game.height <= this.y + this.height) {
       this.isDead = true;
@@ -127,7 +133,7 @@ export default class Player {
       this.speedX = 0;
     }
 
-    if (this.game.isGameStarted || this.isJumping) {
+    if ((this.game.isGameStarted || this.isJumping) && !this.game.isGameWon) {
       this.speedY += this.game.gravity;
       this.y += this.speedY;
       if (this.y > this.floor) {
