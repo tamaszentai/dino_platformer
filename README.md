@@ -1,7 +1,7 @@
 
 # Dino Platformer
 
-<img src="https://github.com/tamaszentai/platformer_game/blob/main/src/assets/images/dino_platformer.png">
+<img src="https://github.com/tamaszentai/platformer_game/blob/main/src/assets/images/dino_platformer.png" alt="Dino Platformer in action image">
 
 This project is a simple platformer game where a dinosaur needs to jump on continuously moving platforms.
 
