@@ -27,7 +27,7 @@ export default class Game {
     this.width = width;
     this.height = height;
     this.gravity = 0.5;
-    this.platformCount = 4;
+    this.platformCount = 250;
     this.resources = new Resources();
     this.platforms = [];
     this.gameSpeed = 0;

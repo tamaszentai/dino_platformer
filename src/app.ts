@@ -1,6 +1,6 @@
 import Game from "./models/Game.js";
 
-const canvas = document.getElementById("mainCanvas") as HTMLCanvasElement;
+const canvas = document.getElementById("canvas") as HTMLCanvasElement;
 const ctx = canvas.getContext("2d")!;
 
 let game = new Game(canvas.width, canvas.height);
