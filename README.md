@@ -4,12 +4,11 @@
 <img src="https://github.com/tamaszentai/platformer_game/blob/main/src/assets/images/dino_platformer.png" alt="Dino Platformer in action image">
 
 This project is a simple platformer game where a dinosaur needs to jump on continuously moving platforms.
+The game is inspired by the Google Chrome dinosaur game with a vertical twist.
 
 ## Getting Started
 
-To play the game, simply open the `index.html` file in your browser.
-
-## Getting Started
+To play the game, simply open https://dino-platformer.web.app/ in your browser.
 
 To run the game locally:
 
