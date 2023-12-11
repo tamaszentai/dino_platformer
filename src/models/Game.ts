@@ -6,6 +6,8 @@ import Thing from "./Thing.js";
 export default class Game {
   width: number;
   height: number;
+  isSoundOn: boolean;
+  isMusicOn: boolean;
   gravity: number;
   platformCount: number;
   resources: Resources;
@@ -23,9 +25,16 @@ export default class Game {
   gameWonThemeCount: number;
   isGameWon: boolean;
 
-  constructor(width: number, height: number) {
+  constructor(
+    width: number,
+    height: number,
+    isSoundOn: boolean,
+    isMusicOn: boolean,
+  ) {
     this.width = width;
     this.height = height;
+    this.isSoundOn = isSoundOn;
+    this.isMusicOn = isMusicOn;
     this.gravity = 0.5;
     this.platformCount = 200;
     this.resources = new Resources();
@@ -68,10 +77,12 @@ export default class Game {
   play() {
     this.isGameStarted = true;
     this.isGameWon = false;
-    this.resources.gameTheme
-      .play()
-      .then()
-      .catch((err) => console.log(err));
+    if (this.isMusicOn) {
+        this.resources.gameTheme
+            .play()
+            .then()
+            .catch((err) => console.log(err));
+    }
     this.gameSpeed = 1;
     this.setCurrentSpeed();
   }
@@ -81,10 +92,12 @@ export default class Game {
     this.resources.gameTheme.pause();
     this.gameSpeed = 0;
     if (this.gameOverThemeCount === 0) {
-      this.resources.gameOverTheme
-        .play()
-        .then()
-        .catch((err) => console.log(err));
+      if (this.isSoundOn) {
+        this.resources.gameOverTheme
+            .play()
+            .then()
+            .catch((err) => console.log(err));
+      }
       this.gameOverThemeCount++;
     }
   }
@@ -96,10 +109,12 @@ export default class Game {
     this.gameSpeed = 0;
 
     if (this.gameWonThemeCount === 0) {
-      this.resources.gameWonTheme
-        .play()
-        .then()
-        .catch((err) => console.log(err));
+      if (this.isSoundOn) {
+        this.resources.gameWonTheme
+          .play()
+          .then()
+          .catch((err) => console.log(err));
+      }
       this.gameWonThemeCount++;
     }
   }
@@ -108,7 +123,30 @@ export default class Game {
     this.currentSpeed = this.gameSpeed;
   }
 
+  toggleSound() {
+    this.isSoundOn = !this.isSoundOn;
+    if (this.isSoundOn) {
+      this.resources.jumpSound.volume = 0.1;
+      this.resources.gameOverTheme.volume = 0.2;
+      this.resources.gameWonTheme.volume = 0.2;
+    } else {
+        this.resources.jumpSound.volume = 0;
+        this.resources.gameOverTheme.volume = 0;
+        this.resources.gameWonTheme.volume = 0;
+    }
+  }
+
+    toggleMusic() {
+        this.isMusicOn = !this.isMusicOn;
+        if (this.isMusicOn && this.isGameStarted) {
+            this.resources.gameTheme.play();
+        } else {
+            this.resources.gameTheme.pause();
+        }
+    }
+
   update() {
+    console.log(this.isMusicOn);
     if (this.player.isDead) {
       this.gameOver();
     }

@@ -71,7 +71,9 @@ export default class Player {
         if (!this.game.isGameStarted && !this.game.isGameWon && !this.game.isGameWon) {
           this.game.play();
         }
-        this.game.resources.jumpSound.play().then(() => this.game.resources.jumpSound.currentTime=0).catch();
+        if (this.game.isSoundOn) {
+            this.game.resources.jumpSound.play().then(() => this.game.resources.jumpSound.currentTime=0).catch();
+        }
         this.jumpCount++;
         this.speedY = -this.jumpStrength;
       }
